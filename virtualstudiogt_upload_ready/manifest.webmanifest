@@ -1,0 +1,10 @@
+{
+  "name": "Virtual Studio GT",
+  "short_name": "VirtualStudioGT",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#020402",
+  "theme_color": "#72ff18",
+  "description": "Diseño, impresión, sublimación, uniformes deportivos, productos publicitarios, banderas e impresión DTF.",
+  "icons": []
+}
