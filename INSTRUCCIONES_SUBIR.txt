@@ -1,0 +1,19 @@
+INSTRUCCIONES PARA SUBIR A GITHUB SIN TERMINAL
+
+1. Abre este repositorio en GitHub:
+   https://github.com/gerardorozco-cloud/virtualstudiogt
+
+2. En la lista de archivos, presiona Add file > Upload files.
+
+3. Arrastra TODOS los archivos y la carpeta assets desde esta carpeta:
+   virtualstudiogt_upload_ready
+
+4. Muy importante: sube el contenido de la carpeta, no el ZIP como archivo del sitio.
+
+5. Escribe un mensaje como:
+   Actualizar tarjeta digital Virtual Studio GT
+
+6. Presiona Commit changes.
+
+7. Luego revisa la página en:
+   https://gerardorozco-cloud.github.io/virtualstudiogt/

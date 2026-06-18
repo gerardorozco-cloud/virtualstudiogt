@@ -1,616 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Constructor de gang sheet DTF</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <section id="startModal" class="start-modal" aria-label="Opciones iniciales">
-      <div class="start-dialog">
-        <header class="start-header">
-          <h2>Bienvenido al builder</h2>
-          <button id="closeStartModal" type="button" aria-label="Cerrar">×</button>
-        </header>
-        <div class="start-grid">
-          <button id="startAutoBtn" class="start-card" type="button">
-            <span class="start-art art-auto"></span>
-            <strong>Auto build</strong>
-            <span>Subir varias imagenes y anidar automaticamente</span>
-          </button>
-          <button id="startManualBtn" class="start-card" type="button">
-            <span class="start-art art-manual"></span>
-            <strong>Manual build</strong>
-            <span>Subir una imagen a la vez y acomodar manualmente</span>
-          </button>
-          <button id="startEditBtn" class="start-card" type="button">
-            <span class="start-art art-edit"></span>
-            <strong>Editar pedido anterior</strong>
-            <span>Recuperar el ultimo borrador en este dispositivo</span>
-          </button>
-          <button id="startNamesBtn" class="start-card" type="button">
-            <span class="start-art art-names"></span>
-            <strong>Nombres y numeros</strong>
-            <span>Crear texto editable para playeras o uniformes</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <main class="app-shell">
-      <aside class="sidebar" aria-label="Panel de configuracion">
-        <section class="brand-block">
-          <div>
-            <p class="eyebrow">Print Studio</p>
-            <h1>Builder de impresion</h1>
-          </div>
-          <span class="status-pill">Listo</span>
-        </section>
-
-        <section class="panel">
-          <h2>Servicio</h2>
-          <label>
-            Tipo de trabajo
-            <select id="serviceMode">
-              <option value="dtf">DTF - Mimaki TxF300</option>
-              <option value="sublimation">Sublimacion - Mimaki TS100</option>
-              <option value="epson_a4">Sublimacion A4 - Epson F170</option>
-            </select>
-          </label>
-          <div id="sublimationOptions" class="service-options" hidden>
-            <label>
-              Papel
-              <select id="paperWidth">
-                <option value="110">Papel 110 cm</option>
-                <option value="160">Papel 160 cm</option>
-              </select>
-            </label>
-            <label>
-              Solicitud
-              <select id="sublimationRequest">
-                <option value="solo_impresion">Solo impresion de papel</option>
-                <option value="sublimacion_piezas">Impresion y sublimacion por piezas</option>
-                <option value="sublimacion_rollo">Impresion y sublimacion por rollo</option>
-              </select>
-            </label>
-            <label>
-              Tela
-              <select id="fabricSource">
-                <option value="cliente">Cliente suministra tela</option>
-                <option value="taller">Nosotros suministramos tela</option>
-              </select>
-            </label>
-            <label>
-              Tipo de tela confirmado
-              <input id="fabricType" type="text" placeholder="Ej. poliester, licra, dry fit" />
-            </label>
-          </div>
-          <div id="epsonOptions" class="service-options" hidden>
-            <p class="service-note">Modo A4 vertical: 21 x 29.7 cm. La hoja crece por paginas completas para imprimir varias hojas en Epson F170.</p>
-            <label class="toggle-row">
-              <input id="a4MultiSheet" type="checkbox" checked />
-              Activar multi hojas A4
-            </label>
-            <label class="toggle-row">
-              <input id="mugNesting" type="checkbox" checked />
-              Nesting tazas: 3 disenos por hoja
-            </label>
-            <label class="toggle-row">
-              <input id="a4Mirror" type="checkbox" checked />
-              Espejo para sublimacion A4
-            </label>
-            <p class="service-note">La mesa se edita normal para acomodar facil. Al exportar PNG/PDF, cada hoja A4 sale invertida horizontalmente.</p>
-            <div class="field-grid">
-              <label>
-                Cantidad por diseno
-                <input id="mugDesignQty" type="number" min="1" max="200" value="1" />
-              </label>
-              <label>
-                Copias por hoja A4
-                <input id="a4SheetCopies" type="number" min="1" max="100" value="1" />
-              </label>
-            </div>
-            <button id="mugPresetBtn" class="full-btn" type="button">Preset taza 20 x 9 cm / 300 DPI</button>
-            <button id="applyMugQtyBtn" class="full-btn secondary" type="button">Aplicar cantidad al diseno</button>
-            <button id="a4NestBtn" class="full-btn secondary" type="button">Anidar tazas 3 por hoja</button>
-          </div>
-        </section>
-
-        <section class="panel">
-          <h2>Hoja</h2>
-          <div class="field-grid">
-            <label>
-              Ancho
-              <span class="input-unit">
-                <input id="sheetWidth" type="number" min="20" max="57" step="0.5" value="57" />
-                <span>cm</span>
-              </span>
-            </label>
-            <label>
-              Alto
-              <span class="input-unit">
-                <input id="sheetHeight" type="number" min="30" max="600" step="1" value="40" />
-                <span>cm</span>
-              </span>
-            </label>
-          </div>
-          <label class="range-field">
-            Zoom
-            <input id="zoom" type="range" min="5" max="35" value="18" />
-          </label>
-          <label class="toggle-row">
-            <input id="snapToggle" type="checkbox" checked />
-            Ajustar a cuadricula
-          </label>
-          <label class="range-field">
-            Separacion entre disenos
-            <span class="input-unit">
-              <input id="itemSpacing" type="number" min="0" max="5" step="0.1" value="0.5" />
-              <span>cm</span>
-            </span>
-          </label>
-          <div class="nesting-options">
-            <label>
-              Modo de acomodo
-              <select id="nestMode">
-                <option value="professional">Profesional por huecos</option>
-                <option value="rows">Filas rapidas</option>
-              </select>
-            </label>
-            <div class="field-grid">
-              <label>
-                Margen
-                <span class="input-unit">
-                  <input id="nestMargin" type="number" min="0" max="5" step="0.1" value="0.6" />
-                  <span>cm</span>
-                </span>
-              </label>
-              <label>
-                Prioridad
-                <select id="nestSort">
-                  <option value="area">Area mayor</option>
-                  <option value="height">Altura mayor</option>
-                  <option value="width">Ancho mayor</option>
-                  <option value="order">Orden subido</option>
-                </select>
-              </label>
-            </div>
-            <label class="toggle-row">
-              <input id="nestRotate" type="checkbox" checked />
-              Rotar automaticamente para ahorrar espacio
-            </label>
-            <label class="toggle-row">
-              <input id="nestCompact" type="checkbox" checked />
-              Compactar para usar menor altura
-            </label>
-          </div>
-        </section>
-
-        <section class="panel">
-          <h2>Cliente</h2>
-          <label>
-            Nombre
-            <input id="customerName" type="text" placeholder="Nombre o negocio" />
-          </label>
-          <label class="range-field">
-            WhatsApp
-            <input id="customerPhone" type="tel" placeholder="Telefono" />
-          </label>
-          <label class="range-field">
-            Notas
-            <textarea id="customerNotes" rows="3" placeholder="Color de camiseta, urgencia, instrucciones"></textarea>
-          </label>
-        </section>
-
-        <section class="panel">
-          <h2>Disenos</h2>
-          <label class="upload-box">
-            <input
-              id="fileInput"
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf,.ai,.pdf,.psd,.svg"
-              multiple
-            />
-            <span class="upload-icon">+</span>
-            <span>Subir PNG, JPG, SVG, PDF, AI o PSD</span>
-          </label>
-          <p id="uploadNotice" class="notice" hidden></p>
-          <div class="tool-row" role="group" aria-label="Herramientas de diseno">
-            <button id="duplicateBtn" type="button" title="Duplicar seleccionado">Duplicar</button>
-            <button id="deleteBtn" type="button" title="Eliminar seleccionado">Eliminar</button>
-            <button id="cropBtn" type="button" title="Recortar bordes transparentes">Recortar</button>
-            <button id="rotateBtn" type="button">Girar</button>
-          </div>
-          <div class="field-grid">
-            <label>
-              Ancho pieza
-              <span class="input-unit">
-                <input id="itemWidth" type="number" min="1" max="57" step="0.5" value="10" />
-                <span>cm</span>
-              </span>
-            </label>
-            <label>
-              Cantidad
-              <input id="itemQty" type="number" min="1" max="200" step="1" value="1" />
-            </label>
-          </div>
-          <div class="tool-row" role="group" aria-label="Acciones de acomodo">
-            <button id="applySizeBtn" type="button">Aplicar</button>
-            <button id="autoArrangeBtn" type="button">Autoacomodar</button>
-          </div>
-        </section>
-
-        <section class="panel object-panel">
-          <h2>Control de piezas</h2>
-          <div class="tool-row compact-actions" role="group" aria-label="Acciones rapidas de piezas">
-            <button id="reviewBtn" type="button">Revisar</button>
-            <button id="centerSelectedBtn" type="button">Centrar</button>
-            <button id="fitHeightBtn" type="button">Ajustar alto</button>
-            <button id="clearSheetBtn" type="button">Limpiar hoja</button>
-          </div>
-          <div id="preflightList" class="preflight-list" aria-live="polite"></div>
-          <div id="itemList" class="item-list" aria-label="Lista de piezas"></div>
-        </section>
-
-        <section class="panel estimate-panel">
-          <h2>Pedido</h2>
-          <label>
-            Precio por cm lineal
-            <span class="input-unit">
-              <span>Q</span>
-              <input id="pricePerCm" type="number" min="0" step="0.01" value="2.50" />
-            </span>
-          </label>
-          <label class="range-field">
-            Resolucion de salida
-            <span class="input-unit">
-              <input id="exportDpi" type="number" min="72" max="300" step="1" value="150" />
-              <span>DPI</span>
-            </span>
-          </label>
-          <dl class="summary-list">
-            <div>
-              <dt>Altura usada</dt>
-              <dd id="usedHeight">0 cm</dd>
-            </div>
-            <div>
-              <dt>Piezas</dt>
-              <dd id="pieceCount">0</dd>
-            </div>
-            <div>
-              <dt>Total estimado</dt>
-              <dd id="totalPrice">Q0.00</dd>
-            </div>
-            <div>
-              <dt>Estado</dt>
-              <dd id="productionStatus">Vacio</dd>
-            </div>
-            <div>
-              <dt>Hojas A4</dt>
-              <dd id="sheetPages">-</dd>
-            </div>
-          </dl>
-          <div class="export-row">
-            <button id="exportPngBtn" class="primary-btn" type="button">PNG final</button>
-            <button id="exportPdfBtn" class="primary-btn alt" type="button">PDF para RasterLink</button>
-            <button id="exportOrderBtn" type="button">Orden del pedido</button>
-            <button id="copyOrderBtn" type="button">Copiar resumen</button>
-            <button id="whatsappOrderBtn" type="button">Enviar por WhatsApp</button>
-          </div>
-        </section>
-      </aside>
-
-      <section class="workspace" aria-label="Area de trabajo">
-        <header class="topbar">
-          <div>
-            <p id="selectedInfo">Sin seleccion</p>
-            <strong id="sheetInfo">57 x 40 cm</strong>
-          </div>
-          <div class="legend">
-            <span><i class="grid-dot"></i> margen seguro 0.6 cm</span>
-            <span><i class="cut-dot"></i> area de impresion</span>
-          </div>
-        </header>
-        <nav class="editor-toolbar" aria-label="Barra de herramientas">
-          <button id="toolUndoBtn" type="button" title="Deshacer">↶</button>
-          <button id="toolRedoBtn" type="button" title="Rehacer">↷</button>
-          <button id="toolUploadBtn" type="button" title="Cargar imagen">＋</button>
-          <button id="toolTextBtn" type="button" title="Agregar texto">T</button>
-          <button id="toolCropBtn" type="button" title="Recortar">⌗</button>
-          <button id="toolRotateBtn" type="button" title="Girar">⟳</button>
-          <button id="toolDuplicateBtn" type="button" title="Duplicar">⧉</button>
-          <button id="toolDeleteBtn" type="button" title="Eliminar">⌫</button>
-          <button id="toolAutoBtn" class="toolbar-command" type="button">Anidar hojas</button>
-          <label class="toolbar-check">
-            <input id="marginToggle" type="checkbox" checked />
-            Margen
-          </label>
-          <label class="toolbar-field">
-            Espacio
-            <input id="toolbarSpacing" type="number" min="0" max="5" step="0.1" value="0.5" />
-            cm
-          </label>
-          <label class="toolbar-field">
-            Zoom
-            <input id="toolbarZoom" type="number" min="5" max="300" step="1" value="100" />
-            %
-          </label>
-        </nav>
-        <div class="work-area">
-          <div class="canvas-wrap">
-            <div class="ruler-shell">
-              <div class="ruler-corner" aria-hidden="true"></div>
-              <div id="horizontalRuler" class="ruler ruler-horizontal" aria-hidden="true"></div>
-              <div id="verticalRuler" class="ruler ruler-vertical" aria-hidden="true"></div>
-              <div class="canvas-stage">
-                <canvas id="builderCanvas" width="900" height="1400" aria-label="Lienzo de gang sheet"></canvas>
-                <div id="emptyState" class="empty-state">
-                  <strong>Sube tus disenos</strong>
-                  <span>Arrastra, acomoda y descarga el archivo final para impresion.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <aside class="text-builder" aria-label="Propiedades de texto">
-            <h2>Texto</h2>
-            <section class="names-panel" aria-label="Nombres y numeros">
-              <h2>Nombres y numeros</h2>
-              <details id="namesDetails" class="roster-section" open>
-                <summary>
-                  <strong><span id="namesCountLabel">(0) NAMES</span></strong>
-                  <span><i id="namesColorChip" class="color-chip"></i><span id="namesSummary">Small (1 in) - Academy</span></span>
-                </summary>
-                <div class="roster-controls">
-                  <label>
-                    Tamano
-                    <select id="namesSize">
-                      <option value="2.54">Small (1 in)</option>
-                      <option value="5.08">Medium (2 in)</option>
-                      <option value="7.62">Large (3 in)</option>
-                    </select>
-                  </label>
-                  <label>
-                    Fuente
-                    <select id="namesFont">
-                      <option value="Impact, Haettenschweiler, sans-serif">Academy</option>
-                      <option value="Arial Black, Arial, sans-serif">Block</option>
-                      <option value="Georgia, serif">College</option>
-                      <option value="'Trebuchet MS', sans-serif">Sport</option>
-                    </select>
-                  </label>
-                  <label>
-                    Ancho del trazo
-                    <input id="namesStrokeWidth" type="range" min="0" max="20" value="6" />
-                  </label>
-                  <div class="color-tabs">
-                    <label class="toggle-row">
-                      <input id="namesUseTextColor" type="checkbox" checked />
-                      Color del texto
-                    </label>
-                    <label class="toggle-row">
-                      <input id="namesUseStroke" type="checkbox" checked />
-                      Trazo
-                    </label>
-                  </div>
-                  <div class="color-control-grid">
-                    <label>
-                      Color texto
-                      <span class="color-row">
-                        <input id="namesTextColorHex" type="text" value="#000000" />
-                        <input id="namesTextColor" type="color" value="#000000" />
-                      </span>
-                    </label>
-                    <label>
-                      Color trazo
-                      <span class="color-row">
-                        <input id="namesStrokeColorHex" type="text" value="#ffffff" />
-                        <input id="namesStrokeColor" type="color" value="#ffffff" />
-                      </span>
-                    </label>
-                  </div>
-                  <div class="swatch-row" data-target="namesTextColorHex">
-                    <button type="button" data-color="#000000" style="--swatch:#000000"></button>
-                    <button type="button" data-color="#ffffff" style="--swatch:#ffffff"></button>
-                    <button type="button" data-color="#d9001b" style="--swatch:#d9001b"></button>
-                    <button type="button" data-color="#149be6" style="--swatch:#149be6"></button>
-                    <button type="button" data-color="#f5b21b" style="--swatch:#f5b21b"></button>
-                    <button type="button" data-color="#19b85f" style="--swatch:#19b85f"></button>
-                  </div>
-                  <div class="roster-entry-grid">
-                    <label>
-                      Names
-                      <input id="namesEntryText" type="text" placeholder="Ej. EDUARDO" />
-                    </label>
-                    <label>
-                      Cantidad
-                      <input id="namesEntryQty" type="number" min="1" max="99" value="1" />
-                    </label>
-                  </div>
-                  <button id="addNameEntryBtn" class="full-btn" type="button">Agregar nombres</button>
-                </div>
-              </details>
-
-              <details id="numbersDetails" class="roster-section">
-                <summary>
-                  <strong><span id="numbersCountLabel">(0) NUMBERS</span></strong>
-                  <span><i id="numbersColorChip" class="color-chip"></i><span id="numbersSummary">Small (4 in) - Academy</span></span>
-                </summary>
-                <div class="roster-controls">
-                  <label>
-                    Tamano
-                    <select id="numbersSize">
-                      <option value="10.16">Small (4 in)</option>
-                      <option value="15.24">Medium (6 in)</option>
-                      <option value="20.32">Large (8 in)</option>
-                      <option value="25.4">XL (10 in)</option>
-                    </select>
-                  </label>
-                  <label>
-                    Fuente
-                    <select id="numbersFont">
-                      <option value="Impact, Haettenschweiler, sans-serif">Academy</option>
-                      <option value="Arial Black, Arial, sans-serif">Block</option>
-                      <option value="Georgia, serif">College</option>
-                      <option value="'Trebuchet MS', sans-serif">Sport</option>
-                    </select>
-                  </label>
-                  <label>
-                    Ancho del trazo
-                    <input id="numbersStrokeWidth" type="range" min="0" max="20" value="6" />
-                  </label>
-                  <div class="color-tabs">
-                    <label class="toggle-row">
-                      <input id="numbersUseTextColor" type="checkbox" checked />
-                      Color del texto
-                    </label>
-                    <label class="toggle-row">
-                      <input id="numbersUseStroke" type="checkbox" checked />
-                      Trazo
-                    </label>
-                  </div>
-                  <div class="color-control-grid">
-                    <label>
-                      Color texto
-                      <span class="color-row">
-                        <input id="numbersTextColorHex" type="text" value="#000000" />
-                        <input id="numbersTextColor" type="color" value="#000000" />
-                      </span>
-                    </label>
-                    <label>
-                      Color trazo
-                      <span class="color-row">
-                        <input id="numbersStrokeColorHex" type="text" value="#ffffff" />
-                        <input id="numbersStrokeColor" type="color" value="#ffffff" />
-                      </span>
-                    </label>
-                  </div>
-                  <div class="swatch-row" data-target="numbersTextColorHex">
-                    <button type="button" data-color="#000000" style="--swatch:#000000"></button>
-                    <button type="button" data-color="#ffffff" style="--swatch:#ffffff"></button>
-                    <button type="button" data-color="#d9001b" style="--swatch:#d9001b"></button>
-                    <button type="button" data-color="#149be6" style="--swatch:#149be6"></button>
-                    <button type="button" data-color="#f5b21b" style="--swatch:#f5b21b"></button>
-                    <button type="button" data-color="#19b85f" style="--swatch:#19b85f"></button>
-                  </div>
-                  <div class="roster-entry-grid">
-                    <label>
-                      Numbers
-                      <input id="numbersEntryText" type="text" placeholder="Ej. 10" />
-                    </label>
-                    <label>
-                      Cantidad
-                      <input id="numbersEntryQty" type="number" min="1" max="99" value="1" />
-                    </label>
-                  </div>
-                  <button id="addNumberEntryBtn" class="full-btn" type="button">Agregar numeros</button>
-                </div>
-              </details>
-            </section>
-
-            <label>
-              Campo de texto
-              <textarea id="textInput" rows="4" placeholder="Escribe, selecciona, copia o pega el texto"></textarea>
-            </label>
-            <div class="field-grid object-grid">
-              <label>
-                Ancho
-                <span class="input-unit">
-                  <input id="textWidth" type="number" min="1" max="160" step="0.1" value="18" />
-                  <span>cm</span>
-                </span>
-              </label>
-              <label>
-                Altura
-                <span class="input-unit">
-                  <input id="textObjectHeight" type="number" min="1" max="60" step="0.1" value="5" />
-                  <span>cm</span>
-                </span>
-              </label>
-              <label>
-                X-Pos
-                <span class="input-unit">
-                  <input id="textX" type="number" min="0" step="0.1" value="0.6" />
-                  <span>cm</span>
-                </span>
-              </label>
-              <label>
-                Y-Pos
-                <span class="input-unit">
-                  <input id="textY" type="number" min="0" step="0.1" value="0.6" />
-                  <span>cm</span>
-                </span>
-              </label>
-            </div>
-            <div class="object-mini-row">
-              <label class="toggle-row">
-                <input id="lockTextRatio" type="checkbox" checked />
-                Proporcion
-              </label>
-              <span class="quality-pill">PPP 300 GOOD</span>
-            </div>
-            <div class="tool-row">
-              <button id="textDuplicateBtn" type="button">Duplicar</button>
-              <button id="textQuantityBtn" type="button">Agregar cantidad</button>
-            </div>
-            <label>
-              Familia de fuentes
-              <select id="textFontFamily">
-                <option value="Arial, Helvetica, sans-serif">Arial</option>
-                <option value="Impact, Haettenschweiler, sans-serif">Impact</option>
-                <option value="Georgia, serif">Georgia</option>
-                <option value="'Times New Roman', serif">Times New Roman</option>
-                <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
-                <option value="'Courier New', monospace">Courier</option>
-              </select>
-            </label>
-            <div class="field-grid">
-              <label>
-                Tamano
-                <input id="textFontSize" type="number" min="8" max="400" step="1" value="120" />
-              </label>
-              <label>
-                Color de texto
-                <span class="color-row">
-                  <input id="textColorHex" type="text" value="#000000" />
-                  <input id="textColor" type="color" value="#000000" />
-                </span>
-              </label>
-            </div>
-            <div class="field-grid">
-              <label class="toggle-row">
-                <input id="textStrokeEnabled" type="checkbox" />
-                Trazo
-              </label>
-              <label>
-                Ancho trazo
-                <input id="textStrokeWidth" type="range" min="0" max="20" value="0" />
-              </label>
-            </div>
-            <label>
-              Color de trazo
-              <span class="color-row">
-                <input id="textStrokeColorHex" type="text" value="#ffffff" />
-                <input id="textStrokeColor" type="color" value="#ffffff" />
-              </span>
-            </label>
-            <div class="text-style-row" aria-label="Estilos de texto">
-              <button id="textBoldBtn" type="button" title="Negrita">B</button>
-              <button id="textUnderlineBtn" type="button" title="Subrayado">U</button>
-              <button id="textStrikeBtn" type="button" title="Tachado">S</button>
-              <button id="textItalicBtn" type="button" title="Cursiva">I</button>
-              <button id="textUpperBtn" type="button" title="Mayusculas">AA</button>
-              <button id="textLowerBtn" type="button" title="Minusculas">Aa</button>
-              <button id="textAlignLeftBtn" type="button" title="Alinear izquierda">≡</button>
-              <button id="textAlignCenterBtn" type="button" title="Centrar">≣</button>
-              <button id="textAlignRightBtn" type="button" title="Alinear derecha">≡</button>
-            </div>
-            <button id="addTextBtn" type="button">Agregar campo de texto</button>
-          </aside>
-        </div>
-      </section>
-    </main>
-
-    <script src="app.js"></script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#020402">
+<meta name="description" content="Virtual Studio GT: tarjeta virtual con redes sociales, WhatsApp, sublimación, uniformes deportivos, productos publicitarios, impresión DTF y DTF Builder.">
+<meta property="og:title" content="Virtual Studio GT · Tarjeta Digital">
+<meta property="og:description" content="Diseño, impresión, sublimación y productos personalizados con enfoque tecnológico y deportivo.">
+<meta property="og:type" content="website">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Virtual Studio GT · Tarjeta Digital</title>
+<style>
+:root{--text:#fff;--muted:#c6d4c8;--green:#8fd33f;--green-deep:#2fae52;--green-dark:#102517;--green-ink:#061108;--ink:#050806;--panel:#0d1710;--line:rgba(143,211,63,.36);--line-soft:rgba(255,255,255,.13);--shadow:rgba(47,174,82,.24)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 88% 10%,rgba(143,211,63,.24),transparent 29%),radial-gradient(circle at 10% 72%,rgba(47,174,82,.18),transparent 32%),linear-gradient(180deg,#f7fff6 0%,#17351f 2%,#071008 46%,#020503 100%);display:flex;justify-content:center;padding:18px 14px 44px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(#000,transparent 76%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.42;background:repeating-linear-gradient(135deg,transparent 0 15px,rgba(143,211,63,.05) 16px 18px),linear-gradient(135deg,transparent 0 62%,rgba(47,174,82,.12) 62.4%,transparent 63%)}
+.wrap{width:100%;max-width:500px;position:relative;z-index:1}.shell{overflow:hidden;border-radius:28px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(16,37,23,.97),rgba(3,8,4,.99));box-shadow:0 26px 90px rgba(0,0,0,.62),0 0 42px rgba(143,211,63,.12);position:relative}
+.shell:before{content:"";position:absolute;top:-110px;right:-120px;width:300px;height:300px;background:radial-gradient(circle,rgba(143,211,63,.22),transparent 68%)}
+.hero{position:relative;z-index:2;text-align:center;padding:24px 18px 16px}.status{display:inline-flex;align-items:center;gap:7px;margin-bottom:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line-soft);background:rgba(255,255,255,.07);color:var(--muted);font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);display:inline-block}
+.brand-logo{width:100%;max-width:430px;margin:0 auto 12px;padding:0;border-radius:18px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 18px rgba(143,211,63,.16));overflow:hidden}
+.logo-symbol{width:100%;height:auto;display:block;object-fit:contain}
+.brand{font-size:clamp(1.6rem,6vw,2.25rem);line-height:1;font-weight:950;text-transform:uppercase}.brand span{color:var(--green)}.tagline{color:var(--muted);line-height:1.5;max-width:390px;margin:8px auto 0;font-size:.96rem}.tagline strong{color:#fff}.badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:15px}.badge{border:1px solid var(--line-soft);background:rgba(255,255,255,.07);color:#fff;border-radius:999px;padding:6px 10px;font-weight:900;font-size:.70rem;letter-spacing:.1em;text-transform:uppercase}.badge:first-child{color:#071007;background:var(--green)}
+.sublimation-hero{position:relative;z-index:2;margin:0 16px 16px;padding:16px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(135deg,rgba(143,211,63,.17),rgba(47,174,82,.12)),linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));display:grid;grid-template-columns:1fr 1.05fr;gap:14px;align-items:center}.sublimation-copy{text-align:left}.sublimation-copy span{display:block;color:var(--green);font-size:.72rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}.sublimation-copy h1{font-size:clamp(1.35rem,5vw,2rem);line-height:1.02;text-transform:uppercase}.sublimation-copy p{color:var(--muted);font-size:.82rem;line-height:1.38;margin-top:8px}.product-stage{min-height:142px;position:relative;border-radius:19px;background:linear-gradient(160deg,#ffffff,#dff1d6 58%,#8fd33f);box-shadow:inset 0 0 0 1px rgba(255,255,255,.65),0 16px 40px rgba(0,0,0,.24);overflow:hidden}.product-stage:before{content:"";position:absolute;inset:14px;border:1px dashed rgba(6,17,8,.24);border-radius:15px}.shirt{position:absolute;left:18px;bottom:20px;width:72px;height:82px;background:#fff;clip-path:polygon(24% 0,42% 0,50% 10%,58% 0,76% 0,100% 21%,82% 39%,82% 100%,18% 100%,18% 39%,0 21%);box-shadow:0 12px 18px rgba(0,0,0,.18)}.shirt:after{content:"GT";position:absolute;left:23px;top:33px;color:#102517;font-size:1rem;font-weight:950}.mug{position:absolute;right:25px;bottom:23px;width:54px;height:66px;border-radius:7px 7px 16px 16px;background:#fff;box-shadow:0 12px 18px rgba(0,0,0,.18)}.mug:before{content:"";position:absolute;right:-17px;top:16px;width:19px;height:26px;border:7px solid #fff;border-left:0;border-radius:0 20px 20px 0}.mug:after{content:"";position:absolute;left:9px;right:9px;top:23px;height:16px;background:linear-gradient(90deg,var(--green),var(--green-deep));border-radius:20px}.bottle{position:absolute;left:88px;bottom:18px;width:30px;height:94px;border-radius:12px 12px 9px 9px;background:linear-gradient(180deg,#17351f,#061108);box-shadow:0 12px 18px rgba(0,0,0,.18)}.bottle:before{content:"";position:absolute;left:8px;top:-13px;width:14px;height:16px;border-radius:7px 7px 2px 2px;background:#17351f}.bottle:after{content:"";position:absolute;inset:34px 5px 16px;border-radius:6px;background:linear-gradient(180deg,var(--green),var(--green-deep))}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px;position:relative;z-index:2}.action{min-height:54px;border-radius:14px;border:1px solid var(--line-soft);background:rgba(255,255,255,.07);color:#fff;text-decoration:none;display:grid;place-items:center;text-align:center;font-size:.74rem;font-weight:900;cursor:pointer;font-family:inherit}.action span{display:block;color:var(--green);font-size:1.08rem;margin-bottom:2px}
+.links{display:grid;gap:10px;padding:0 16px 18px;position:relative;z-index:2}.link{min-height:62px;border:1px solid rgba(255,255,255,.12);border-radius:16px;color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(3,7,4,.86));text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.link:hover{transform:translateY(-2px);border-color:var(--green);box-shadow:0 0 22px var(--shadow)}.link.primary{background:linear-gradient(135deg,var(--green),#21c95e);color:#031003;border-color:var(--green);box-shadow:0 0 26px rgba(117,255,35,.18)}.left{display:flex;align-items:center;gap:12px;min-width:0}.icon{width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--green);color:#041004;display:grid;place-items:center;font-size:1.15rem;font-weight:950}.primary .icon{background:#041004;color:var(--green)}.label{display:block;font-weight:950;font-size:.94rem;line-height:1.15}.sub{display:block;color:var(--muted);font-size:.74rem;margin-top:3px;font-weight:700;line-height:1.2}.primary .sub{color:rgba(3,16,3,.70)}.arrow{opacity:.62;font-weight:900}
+.section{padding:20px 16px 0;position:relative;z-index:2}.section-title{color:#fff;font-size:1.03rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:950}.section-title span{color:var(--green)}.catalog{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.cat{min-height:132px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(3,8,4,.84));color:#fff;text-decoration:none;padding:15px 12px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .16s ease,border-color .16s ease;overflow:hidden;position:relative}.cat:after{content:"";position:absolute;inset:auto -40px -60px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(143,211,63,.18),transparent 65%)}.cat:hover{transform:translateY(-3px);border-color:var(--green)}.cat-icon{color:var(--green);font-size:1.75rem;line-height:1;font-weight:950}.cat strong{display:block;font-size:.86rem;text-transform:uppercase;line-height:1.1;margin-top:14px;position:relative;z-index:1}.cat small{display:block;color:var(--muted);font-size:.73rem;line-height:1.25;margin-top:6px;position:relative;z-index:1}
+.quote-box{margin:20px 16px 0;position:relative;z-index:2;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.06);padding:16px}.quote-box h2{color:var(--green);font-size:1rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}.quote-box p{color:var(--muted);line-height:1.45;font-size:.86rem}.form{display:grid;gap:9px;margin-top:12px}.form input,.form select,.form textarea{width:100%;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.28);color:#fff;border-radius:12px;padding:12px;font-size:.9rem;outline:none;font-family:inherit}.form textarea{min-height:76px;resize:vertical}.form button{border:0;border-radius:12px;background:var(--green);color:#041004;padding:13px;font-weight:950;cursor:pointer;font-family:inherit}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.shot{aspect-ratio:1;border-radius:15px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,rgba(143,211,63,.18),rgba(47,174,82,.12)),linear-gradient(135deg,rgba(255,255,255,.08),rgba(2,5,3,.92));display:grid;place-items:center;text-align:center;color:#fff;padding:9px;font-size:.70rem;font-weight:900;text-transform:uppercase}.claim{text-align:center;padding:22px 16px 2px;position:relative;z-index:2}.claim strong{display:block;font-size:1.32rem;line-height:1.12;text-transform:uppercase;font-style:italic}.claim span{color:var(--green)}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}.feat{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--muted);border-radius:13px;padding:11px 5px;font-size:.66rem;line-height:1.22;font-weight:900;text-transform:uppercase}.feat b{display:block;color:var(--green);font-size:1.16rem;margin-bottom:4px}.qr{margin:20px 16px 18px;padding:16px;border:1px dashed rgba(143,211,63,.4);border-radius:18px;text-align:center;background:rgba(255,255,255,.04);position:relative;z-index:2}.qr img{width:134px;background:#fff;border-radius:13px;padding:8px}.qr p{color:var(--muted);margin-top:10px;font-size:.76rem;line-height:1.3}footer{text-align:center;color:rgba(198,212,200,.62);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;margin:18px 0 4px}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);background:#101710;border:1px solid var(--line);color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 15px 45px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:20;font-size:.86rem;font-weight:900;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:430px){.sublimation-hero{grid-template-columns:1fr}.product-stage{min-height:132px}.actions{grid-template-columns:1fr}.catalog{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}.gallery{grid-template-columns:1fr 1fr}.brand-logo{max-width:340px}}
+</style>
+</head>
+<body>
+<main class="wrap"><section class="shell"><header class="hero"><div class="status"><i></i> Tarjeta digital activa</div>
+<div class="brand-logo"><img class="logo-symbol" src="assets/virtual-studio-logo.png" alt="Virtual Studio"></div>
+<p class="tagline"><strong>Sublimación, DTF e impresión personalizada</strong> para marcas, equipos, eventos y regalos con acabado profesional.</p><div class="badges"><span class="badge">Sublimación</span><span class="badge">Playeras</span><span class="badge">Tazas</span><span class="badge">DTF</span></div></header>
+<section class="sublimation-hero"><div class="sublimation-copy"><span>Personalizados listos</span><h1>Sublima tu idea con estilo</h1><p>Tazas, pachones, playeras, uniformes y promocionales con diseño hecho a la medida.</p></div><div class="product-stage" aria-label="Productos de sublimación"><span class="shirt"></span><span class="bottle"></span><span class="mug"></span></div></section>
+<div class="actions"><a class="action" href="virtual-studio-contacto.vcf" download><span>＋</span>Guardar contacto</a><button class="action" type="button" onclick="shareCard()"><span>↗</span>Compartir</button><button class="action" type="button" onclick="copyLink()"><span>⛓</span>Copiar link</button></div>
+<nav class="links">
+<a class="link primary" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20una%20cotizaci%C3%B3n" target="_blank" rel="noopener"><span class="left"><span class="icon">☏</span><span><span class="label">Cotizar por WhatsApp</span><span class="sub">4996-1860 · respuesta directa</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="https://gerardorozco-cloud.github.io/dtf-builder/" target="_blank" rel="noopener"><span class="left"><span class="icon">DTF</span><span><span class="label">Abrir DTF Builder</span><span class="sub">Herramienta para preparar gang sheets</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="#" target="_blank" rel="noopener"><span class="left"><span class="icon">▣</span><span><span class="label">Ver catálogo completo</span><span class="sub">PDF / Google Drive</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="tel:+50249961860"><span class="left"><span class="icon">☎</span><span><span class="label">Llamar ahora</span><span class="sub">+502 4996-1860</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="https://instagram.com/virtualstudiogt" target="_blank" rel="noopener"><span class="left"><span class="icon">◎</span><span><span class="label">Instagram</span><span class="sub">@virtualstudiogt</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="https://facebook.com/virtualstudiogt" target="_blank" rel="noopener"><span class="left"><span class="icon">f</span><span><span class="label">Facebook</span><span class="sub">Virtual Studio GT</span></span></span><span class="arrow">›</span></a>
+<a class="link" href="https://tiktok.com/@virtualstudiogt" target="_blank" rel="noopener"><span class="left"><span class="icon">♪</span><span><span class="label">TikTok</span><span class="sub">@virtualstudiogt</span></span></span><span class="arrow">›</span></a>
+</nav>
+<section class="section"><h2 class="section-title"><span>Categorías</span> de productos</h2><div class="catalog">
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20informaci%C3%B3n%20sobre%20Dise%C3%B1o" target="_blank"><div><span class="cat-icon">▱</span><strong>Diseño</strong><small>Artes, logos, marcas y propuestas visuales.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20informaci%C3%B3n%20sobre%20Impresi%C3%B3n" target="_blank"><div><span class="cat-icon">▤</span><strong>Impresión</strong><small>Material gráfico, papelería y formatos.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20informaci%C3%B3n%20sobre%20Sublimaci%C3%B3n" target="_blank"><div><span class="cat-icon">◖</span><strong>Sublimación</strong><small>Tazas, pachones, playeras y personalizados.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20cotizar%20Uniformes%20Deportivos" target="_blank"><div><span class="cat-icon">⚽</span><strong>Uniformes Deportivos</strong><small>Equipos, escuelas, torneos y empresas.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20informaci%C3%B3n%20sobre%20Productos%20Publicitarios" target="_blank"><div><span class="cat-icon">▸</span><strong>Productos Publicitarios</strong><small>Promocionales, tazas, pachones y playeras.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20cotizar%20Banderas" target="_blank"><div><span class="cat-icon">⚑</span><strong>Banderas</strong><small>Eventos, equipos, marcas e instituciones.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20informaci%C3%B3n%20sobre%20Impresi%C3%B3n%20DTF" target="_blank"><div><span class="cat-icon">DTF</span><strong>Impresión DTF</strong><small>Transfer textil para prendas personalizadas.</small></div></a>
+<a class="cat" href="https://wa.me/50249961860?text=Hola%20Virtual%20Studio%20GT,%20quiero%20ver%20productos%20personalizados" target="_blank"><div><span class="cat-icon">★</span><strong>Más productos</strong><small>Playeras, escolares, empresas y detalles.</small></div></a>
+</div></section>
+<section class="quote-box"><h2>Cotización rápida</h2><p>Escribe lo que necesitas y se abrirá WhatsApp con el mensaje listo para enviar.</p><form class="form" onsubmit="sendLead(event)"><input id="nombre" type="text" placeholder="Nombre o empresa"><select id="servicio"><option value="">Selecciona un servicio</option><option>Uniformes Deportivos</option><option>Impresión DTF</option><option>Sublimación</option><option>Impresión</option><option>Productos Publicitarios</option><option>Banderas</option><option>Diseño</option></select><textarea id="mensaje" placeholder="Cantidad, medidas, idea, fecha o detalles"></textarea><button type="submit">Enviar consulta por WhatsApp</button></form></section>
+<section class="section"><h2 class="section-title"><span>Trabajos</span> recientes</h2><div class="gallery"><div class="shot">Uniformes deportivos</div><div class="shot">DTF textil</div><div class="shot">Tazas sublimadas</div><div class="shot">Pachones</div><div class="shot">Banderas</div><div class="shot">Publicidad</div></div></section>
+<section class="claim"><strong>Impulsamos tus ideas,<br><span>potenciamos tu marca</span></strong><div class="features"><div class="feat"><b>✓</b>Calidad<br>Premium</div><div class="feat"><b>⚙</b>Tecnología<br>Avanzada</div><div class="feat"><b>⚡</b>Entrega<br>Rápida</div><div class="feat"><b>🤝</b>Atención<br>Personal</div></div></section>
+<section class="qr"><img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://virtualstudiogt.com" alt="Código QR Virtual Studio GT"><p>QR listo para tarjeta física, sticker, empaque o NFC. Se actualizará con tu URL final.</p></section>
+</section><footer>Virtual Studio GT · Diseño que destaca, calidad que impacta</footer></main>
+<div id="toast" class="toast">Listo</div>
+<script>
+function showToast(message){const toast=document.getElementById("toast");toast.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1800)}
+function pageUrl(){return window.location.href.startsWith("file:")?"https://gerardorozco-cloud.github.io/virtualstudiogt/":window.location.href}
+async function copyLink(){try{await navigator.clipboard.writeText(pageUrl());showToast("Link copiado")}catch(e){showToast("No se pudo copiar")}}
+async function shareCard(){const data={title:"Virtual Studio GT",text:"Tarjeta digital de Virtual Studio GT",url:pageUrl()};if(navigator.share){try{await navigator.share(data)}catch(e){}}else{copyLink()}}
+function sendLead(event){event.preventDefault();const nombre=document.getElementById("nombre").value.trim();const servicio=document.getElementById("servicio").value.trim();const mensaje=document.getElementById("mensaje").value.trim();const texto=encodeURIComponent("Hola Virtual Studio GT, quiero una cotización."+(nombre?"\nNombre/empresa: "+nombre:"")+(servicio?"\nServicio: "+servicio:"")+(mensaje?"\nDetalles: "+mensaje:""));window.open("https://wa.me/50249961860?text="+texto,"_blank")}
+(function setQr(){document.getElementById("qrImg").src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(pageUrl())})();
+</script>
+</body></html>
